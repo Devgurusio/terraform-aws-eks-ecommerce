@@ -11,6 +11,22 @@ module "eks-cluster" {
   vpc_public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
 
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::xxxxxxxx:user/youremail@yourdomain.com"
+      username = "youremail@yourdomain"
+      groups   = ["system:masters"]
+    }
+  ]
+
+  map_roles = [
+    {
+    rolearn  = "arn:aws:iam::xxxxxxxx:role/YourRoleARN"
+    username = "yourroleusername"
+    groups   = ["system:masters"]
+  }
+  ]
+
   # Here, we define all node pools that we want to create
 
   self_managed_node_groups = {

@@ -106,10 +106,10 @@ module "eks_cluster" {
 #   Doing it this way expects kubectl to be installed on the host running this command.
 resource "null_resource" "apply" {
   triggers = {
-    configmap_yaml = sha512(module.eks_cluster.aws_auth_configmap_yaml)
+    configmap_yaml = sha512(jsonencode(local.updated_auth_configmap_data))
     cmd_patch      = <<-EOT
       kubectl create configmap aws-auth -n kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-      kubectl patch configmap/aws-auth --patch "${module.eks_cluster.aws_auth_configmap_yaml}" -n kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
+      kubectl patch configmap/aws-auth --patch '${chomp(jsonencode(local.updated_auth_configmap_data))}' -n kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
     EOT
   }
 
