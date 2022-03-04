@@ -114,7 +114,7 @@ resource "null_resource" "apply" {
   }
 
   provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
+    interpreter = ["/bin/sh", "-c"]
     environment = {
       KUBECONFIG = base64encode(local.kubeconfig)
     }
