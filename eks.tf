@@ -10,7 +10,7 @@ data "aws_eks_cluster_auth" "this" {
 
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.2.6"
+  version = "~> 18.8.1"
 
   cluster_name    = local.cluster_name
   cluster_version = var.kubernetes_version
