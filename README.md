@@ -20,7 +20,9 @@ Features enabled:
 
 * Non-default SA for nodes
 
-* Usage of containerd as runtime (configurable on the example file)  
+* Usage of containerd as runtime (configurable on the example file) 
+
+* `aws-auth` management
 
 ## Usage
 
@@ -49,15 +51,17 @@ This module requires the `kubectl` client to be installed, since it uses a local
 
 ### Inputs
 
-| Name                      | Description                                                                                                                                        | Type         | Default                                             | Required |
-|---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|--------------|-----------------------------------------------------|----------|
-| environment               | The environment where this cluster will be deployed. All names will be generated from this variable                                                | string       | devgurus-dev                                        | no       |
-| kubernetes_version        | The Kubernetes version that the module will try to bootstrap                                                                                       | string       | 1.21                                                | no       |
-| self_managed_node_groups  | An object representing all node-groups that you want to create. They should be generated according the terraform-aws-modules/eks/aws documentation | any          | n/a                                                 | yes      |
-| vpc_cidr                  | VPC's CIDR to be created by the VPC module                                                                                                         | string       | 10.0.0.0/16                                         | no       |
-| vpc_private_subnets       | VPC's private subnets to be created by the VPC module                                                                                              | list(string) | [ "10.0.1.0/24" ,  "10.0.2.0/24" ,  "10.0.3.0/24" ] | no       |
-| vpc_public_subnets        | VPC's public subnets to be created by the VPC module                                                                                               | list(string) | [ "10.0.4.0/24" ,  "10.0.5.0/24" ,  "10.0.6.0/24" ] | no       |
-| enable_cluster_autoscaler | Whether to create a Helm release installing cluster-autoscaler resources or not                                                                    | bool         | false                                               | no       |
+| Name                      | Description                                                                                                                                        | Type                                                                                            | Default                                             | Required |
+|---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------|----------|
+| environment               | The environment where this cluster will be deployed. All names will be generated from this variable                                                | string                                                                                          | devgurus-dev                                        | no       |
+| kubernetes_version        | The Kubernetes version that the module will try to bootstrap                                                                                       | string                                                                                          | 1.21                                                | no       |
+| self_managed_node_groups  | An object representing all node-groups that you want to create. They should be generated according the terraform-aws-modules/eks/aws documentation | any                                                                                             | n/a                                                 | yes      |
+| vpc_cidr                  | VPC's CIDR to be created by the VPC module                                                                                                         | string                                                                                          | 10.0.0.0/16                                         | no       |
+| vpc_private_subnets       | VPC's private subnets to be created by the VPC module                                                                                              | list(string)                                                                                    | [ "10.0.1.0/24" ,  "10.0.2.0/24" ,  "10.0.3.0/24" ] | no       |
+| vpc_public_subnets        | VPC's public subnets to be created by the VPC module                                                                                               | list(string)                                                                                    | [ "10.0.4.0/24" ,  "10.0.5.0/24" ,  "10.0.6.0/24" ] | no       |
+| enable_cluster_autoscaler | Whether to create a Helm release installing cluster-autoscaler resources or not                                                                    | bool                                                                                            | false                                               | no       |
+| map_users                 | An array of objects that represent what IAM users have access to the EKS Cluster                                                                   | list(object({     userarn  =  string     username =  string     groups   = list( string )   })) | []                                                  | no       |
+| map_roles                 | An array of objects that represent what IAM roles have access to the EKS Cluster                                                                   | list(object({     rolearn  =  string     username =  string     groups   = list( string )   })) | []                                                  | no       |
 
 ### Outputs
 
