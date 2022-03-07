@@ -16,15 +16,20 @@ module "eks-cluster" {
       userarn  = "arn:aws:iam::xxxxxxxx:user/youremail@yourdomain.com"
       username = "youremail@yourdomain"
       groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::xxxxxxxx:user/youremail2@yourdomain.com"
+      username = "youremail2@yourdomain.com"
+      groups   = ["system:masters"]
     }
   ]
 
   map_roles = [
     {
-    rolearn  = "arn:aws:iam::xxxxxxxx:role/YourRoleARN"
-    username = "yourroleusername"
-    groups   = ["system:masters"]
-  }
+      rolearn  = "arn:aws:iam::xxxxxxxx:role/YourRoleARN"
+      username = "yourroleusername"
+      groups   = ["system:masters"]
+    }
   ]
 
   # Here, we define all node pools that we want to create

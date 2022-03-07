@@ -100,24 +100,16 @@ module "eks_cluster" {
 
 }
 
+resource "kubernetes_config_map" "aws_auth" {
 
-
-# Extracted from the official AWS EKS module documentation, we need to patch the aws-auth configmap this way.
-#   Doing it this way expects kubectl to be installed on the host running this command.
-resource "null_resource" "apply" {
-  triggers = {
-    configmap_yaml = sha512(jsonencode(local.updated_auth_configmap_data))
-    cmd_patch      = <<-EOT
-      kubectl create configmap aws-auth -n kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-      kubectl patch configmap/aws-auth --patch '${chomp(jsonencode(local.updated_auth_configmap_data))}' -n kube-system --kubeconfig <(echo $KUBECONFIG | base64 --decode)
-    EOT
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
   }
 
-  provisioner "local-exec" {
-    interpreter = ["/bin/sh", "-c"]
-    environment = {
-      KUBECONFIG = base64encode(local.kubeconfig)
-    }
-    command = self.triggers.cmd_patch
+  data = {
+    mapAccounts = "[]"
+    mapRoles    = local.updated_auth_configmap_data.data.mapRoles
+    mapUsers    = local.updated_auth_configmap_data.data.mapUsers
   }
 }
