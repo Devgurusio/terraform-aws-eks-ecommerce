@@ -32,6 +32,10 @@ output "oidc_provider_arn" {
   value       = module.eks_cluster.oidc_provider_arn
 }
 
+output "self_managed_node_groups_autoscaling_group_names" {
+  description = "The names of the self managed ASG created by the module"
+  value       = module.eks_cluster.self_managed_node_groups_autoscaling_group_names
+}
 
 ################################################################################
 # CloudWatch Log Group
