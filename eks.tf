@@ -10,7 +10,7 @@ data "aws_eks_cluster_auth" "this" {
 
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.8.1"
+  version = "~> 18.17.0"
 
   cluster_name    = local.cluster_name
   cluster_version = var.kubernetes_version
@@ -113,3 +113,4 @@ resource "kubernetes_config_map" "aws_auth" {
     mapUsers    = local.updated_auth_configmap_data.data.mapUsers
   }
 }
+
