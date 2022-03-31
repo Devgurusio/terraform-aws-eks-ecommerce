@@ -60,21 +60,6 @@ module "eks-cluster" {
       sudo systemctl start amazon-ssm-agent
       EOT
 
-
-      # We add this tags into the AutoScaling Group to enable the cluster-autoscaler discovery
-      propagate_tags = [
-        {
-          "key"                 = "k8s.io/cluster-autoscaler/enabled"
-          "propagate_at_launch" = "false"
-          "value"               = "true"
-        },
-        {
-          "key"                 = "k8s.io/cluster-autoscaler/eks-spot-demo-eks-cluster"
-          "propagate_at_launch" = "false"
-          "value"               = "owned"
-        }
-      ]
-
     }
   }
 
