@@ -41,6 +41,28 @@ resource "helm_release" "cluster_autoscaler" {
   }
 }
 
+
+// Here, we're gonna create the cluster-autoscaler tags so that the cluster-autoscaler can discover the autoscaling groups
+resource "aws_autoscaling_group_tag" "cluster_autoscaler_discovery_name" {
+  for_each               = { for k in toset(module.eks_cluster.self_managed_node_groups_autoscaling_group_names) : k => k if var.enable_cluster_autoscaler == true }
+  autoscaling_group_name = each.key
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/${local.cluster_name}"
+    value               = "owned"
+    propagate_at_launch = false
+  }
+}
+
+resource "aws_autoscaling_group_tag" "cluster_autoscaler_discovery_enabled" {
+  for_each               = { for k in toset(module.eks_cluster.self_managed_node_groups_autoscaling_group_names) : k => k if var.enable_cluster_autoscaler == true }
+  autoscaling_group_name = each.key
+  tag {
+    key                 = "k8s.io/cluster-autoscaler/enabled"
+    value               = "true"
+    propagate_at_launch = false
+  }
+}
+
 resource "helm_release" "metrics_server" {
   depends_on = [
     module.eks_cluster

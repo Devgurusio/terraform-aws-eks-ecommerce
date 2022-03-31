@@ -20,7 +20,7 @@ Features enabled:
 
 * Non-default SA for nodes
 
-* Usage of containerd as runtime (configurable on the example file) 
+* Usage of containerd as runtime (configurable on the example file)
 
 * `aws-auth` management
 
@@ -34,10 +34,9 @@ You can find a fully functional, production-ready example on the `examples/` fol
 | --------- | ------- |
 | terraform | >= 1.0 |
 
-**Important Note**
+### Important Note
 
 This module requires the `kubectl` client to be installed, since it uses a local exec provisioner.
-
 
 ### Providers
 
@@ -75,3 +74,4 @@ This module requires the `kubectl` client to be installed, since it uses a local
 | oidc_provider_arn          | The ARN of the OIDC Provider              |
 | cloudwatch_log_group_name          | Name of cloudwatch log group created              |
 | cloudwatch_log_group_arn          | Arn of cloudwatch log group created              |
+| self_managed_node_groups_autoscaling_group_names | The names of the self managed ASG created by the module |
