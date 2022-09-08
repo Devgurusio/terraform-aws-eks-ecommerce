@@ -10,31 +10,28 @@ data "aws_eks_cluster_auth" "this" {
 
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 18.17.0"
+  version = "~> 18.29.0"
 
   cluster_name    = local.cluster_name
   cluster_version = var.kubernetes_version
 
   cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
+  manage_aws_auth_configmap = var.manage_aws_auth_configmap
+  create_aws_auth_configmap = var.create_aws_auth_configmap
+
+  aws_auth_roles = var.map_roles
+  aws_auth_users = var.map_users
+
   # # Enabling encryption on AWS EKS secrets using a customer-created key
-  # cluster_encryption_config = [{
-  #   provider_key_arn = aws_kms_key.eks_crypto_key.arn
-  #   resources        = ["secrets"]
-  # }]
+  cluster_encryption_config = [{
+    provider_key_arn = aws_kms_key.eks_kms_key.arn
+    resources        = ["secrets"]
+  }]
 
 
   # Enabling this, we allow EKS to manage this components for us (upgrading and maintaining)
   cluster_addons = {
-
-    # CoreDNS addon was removed from the module because it causes an execution loop
-    #   This module requires the workers to be created, but the dependency is not set-up correctly
-    #    For the time being, it would be advised to manage it outside of the module
-
-    # coredns = {
-    #   resolve_conflicts = "OVERWRITE"
-    # }
-
     kube-proxy = {}
     vpc-cni = {
       resolve_conflicts = "OVERWRITE"
@@ -50,13 +47,6 @@ module "eks_cluster" {
   self_managed_node_group_defaults = {
     update_launch_template_default_version = true
     iam_role_additional_policies           = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
-
-    // This is a workaround that we need to apply in order to prevent the module from tagging all SG
-    //  if more than 1 SG is tagged by the module, then, the Kubernetes Load Balancers won't work
-    security_group_tags = {
-      "kubernetes.io/cluster/${local.cluster_name}" = null
-    }
-
   }
 
 
@@ -99,18 +89,3 @@ module "eks_cluster" {
   }
 
 }
-
-resource "kubernetes_config_map" "aws_auth" {
-
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-
-  data = {
-    mapAccounts = "[]"
-    mapRoles    = local.updated_auth_configmap_data.data.mapRoles
-    mapUsers    = local.updated_auth_configmap_data.data.mapUsers
-  }
-}
-

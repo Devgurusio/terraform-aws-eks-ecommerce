@@ -11,7 +11,10 @@ resource "aws_iam_policy" "autoscaler_modify_asg" {
           "autoscaling:DescribeAutoScalingInstances",
           "autoscaling:DescribeLaunchConfigurations",
           "autoscaling:DescribeTags",
+          "ec2:DescribeInstanceTypes",
           "ec2:DescribeLaunchTemplateVersions",
+          "ec2:GetInstanceTypesFromInstanceRequirements",
+          "eks:DescribeNodegroup"
         ]
         Effect   = "Allow"
         Resource = "*"
