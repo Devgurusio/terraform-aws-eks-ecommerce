@@ -39,15 +39,15 @@ variable "enable_cluster_autoscaler" {
 }
 
 variable "manage_aws_auth_configmap" {
-  type = bool
+  type        = bool
   description = "Choose whether the EKS module should manage your aws-auth configmap or not"
-  default = true
+  default     = true
 }
 
 variable "create_aws_auth_configmap" {
-  type = bool
+  type        = bool
   description = "This option toogles aws-auth creation. It should only be enabled when using self-managed nodes"
-  default = false
+  default     = false
 }
 
 variable "map_roles" {

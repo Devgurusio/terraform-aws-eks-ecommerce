@@ -64,7 +64,7 @@ module "eks-cluster" {
 
       autoscaling_group_tags = {
         "k8s.io/cluster-autoscaler/eks-spot-demo-eks-cluster" = "owned"
-        "k8s.io/cluster-autoscaler/enabled" = "true"
+        "k8s.io/cluster-autoscaler/enabled"                   = "true"
       }
     }
   }
