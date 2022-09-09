@@ -1,7 +1,7 @@
 module "eks-cluster" {
   source             = "../."
   environment        = "eks-spot-demo"
-  kubernetes_version = "1.21"
+  kubernetes_version = "1.23"
 
   enable_cluster_autoscaler = true
 
@@ -10,6 +10,8 @@ module "eks-cluster" {
   vpc_private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   vpc_public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
+
+  create_aws_auth_configmap = true
 
   map_users = [
     {
@@ -38,7 +40,7 @@ module "eks-cluster" {
     spot_pool = {
       name = "spool-node-pool"
 
-      instance_type = "t2.medium"
+      instance_type = "t3.medium"
 
       max_size     = 6
       desired_size = 2
@@ -60,7 +62,10 @@ module "eks-cluster" {
       sudo systemctl start amazon-ssm-agent
       EOT
 
+      autoscaling_group_tags = {
+        "k8s.io/cluster-autoscaler/eks-spot-demo-eks-cluster" = "owned"
+        "k8s.io/cluster-autoscaler/enabled"                   = "true"
+      }
     }
   }
-
 }
